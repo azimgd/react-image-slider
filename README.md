@@ -14,7 +14,7 @@ and add css file from `./node_modules/react-image-slider/lib/image-slider.css`
 
 ```javascript
 import React from 'react';
-import Slider from 'react-image-slider'
+import Slider from 'react-image-slider';
 
 export default React.createClass({
   render() {
