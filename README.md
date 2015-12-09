@@ -12,7 +12,7 @@ and add css file from `./node_modules/react-image-slider/lib/image-slider.css`
 
 ## Example
 
-```
+```javascript
 import React from 'react';
 import Slider from 'react-image-slider'
 
