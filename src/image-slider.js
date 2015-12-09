@@ -9,21 +9,23 @@ export default React.createClass({
     };
   },
   componentDidMount() {
-    this.setImages(this.props.images);
-    this.setItemDimensions('slider-item');
-    window.addEventListener('resize', this.handleResize);
+    this.setItemDimensions('rsc-slider-item');
+    window.addEventListener('resize', this.setItemDimensions.bind(this, 'rsc-slider-item'));
   },
-  componentWillUnmount: function() {
-      window.removeEventListener('resize', this.handleResize);
+  componentWillMount() {
+    const images = (this.props.images || []).map((image, count) => {
+      return image + `?rscver${count}`;
+    });
+    this.setState({images});
+  },
+  componentWillUnmount() {
+      window.removeEventListener('resize', this.setItemDimensions.bind(this, 'rsc-slider-item'));
   },
   scrollLeft() {
     this.updatePosition(this.state.currentPosition - 1);
   },
   scrollRight() {
     this.updatePosition(this.state.currentPosition + 1);
-  },
-  handleResize() {
-    this.setItemDimensions();
   },
   updatePosition(position) {
     const whole = position + this.state.visibleItems;
@@ -37,9 +39,6 @@ export default React.createClass({
   calculateShift(offset, amount) {
     return offset * amount;
   },
-  setImages(images) {
-    this.setState({ images });
-  },
   setItemDimensions(classname) {
     const items = document.getElementsByClassName(classname);
     const itemWidth = (items[0]) ? items[0].offsetWidth : 0;
@@ -52,30 +51,31 @@ export default React.createClass({
     return { transform };
   },
   isOpaque(key) {
-    const opaque = this.state.images.slice(this.state.currentPosition, this.state.visibleItems + this.state.currentPosition);
+    const nextPosition = this.state.visibleItems + this.state.currentPosition;
+    const opaque = this.state.images.slice(this.state.currentPosition, nextPosition);
 
     return (opaque.indexOf(this.state.images[key]) !== -1);
   },
   render() {
     const sliderStyle = this.sliderStyle();
-    const images = this.state.images || [];
+    const images = this.state.images;
 
     return (
-      <div className="container">
-        <div className="slider" style={sliderStyle}>
+      <div className="rsc-container">
+        <div className="rsc-slider" style={sliderStyle}>
           {images.map((item, key) => {
             const isOpaque = this.isOpaque(key);
-            const itemClass = (isOpaque) ? 'slider-item' : 'slider-item slider-item_transparent';
+            const itemClass = (isOpaque) ? 'rsc-slider-item' : 'rsc-slider-item rsc-slider-item_transparent';
 
             return <div className={itemClass} key={key}>
-              <img src={item} className="slider-item-img" />
+              <img src={item} className="rsc-slider-item-img" />
             </div>
           })}
         </div>
         {images.length > this.state.visibleItems ?
         <div>
-          <div className="navigation navigation_left arrow_left" onClick={this.scrollLeft}></div>
-          <div className="navigation navigation_right arrow_right" onClick={this.scrollRight}></div>
+          <div className="rsc-navigation rsc-navigation_left rsc-arrow_left" onClick={this.scrollLeft}></div>
+          <div className="rsc-navigation rsc-navigation_right rsc-arrow_right" onClick={this.scrollRight}></div>
         </div>
         :null}
       </div>
