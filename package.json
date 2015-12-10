@@ -1,11 +1,15 @@
 {
     "name": "react-image-slider",
-    "version": "0.0.3",
+    "version": "0.0.4",
     "description": "Image slider component for React",
     "main": "lib/image-slider.js",
     "keywords": [
         "react-component",
         "react",
+        "react-gallery",
+        "react-slider",
+        "react-carousel",
+        "carousel",
         "image",
         "gallery",
         "slider",

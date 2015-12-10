@@ -29,7 +29,7 @@ export default React.createClass({
       '//placehold.it/600/e67e22',
     ];
 
-    return <Slider images={images}/>;
+    return <Slider images={images} isInfinite={true}/>;
   }
 });
 ```

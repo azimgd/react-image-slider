@@ -1,6 +1,11 @@
 import React from 'react';
 
 export default React.createClass({
+  getDefaultProps() {
+    return {
+      isInfinite: true
+    }
+  },
   getInitialState() {
     return {
       images: [],
@@ -30,8 +35,16 @@ export default React.createClass({
   updatePosition(position) {
     const whole = position + this.state.visibleItems;
 
+    if(this.props.isInfinite && position < 0) {
+      this.setState({ currentPosition: whole });
+    }
+
+    if(this.props.isInfinite && whole > this.state.images.length) {
+      this.setState({ currentPosition: 0 });
+    }
+
     if(whole > this.state.images.length || position < 0) {
-      return false;
+      return;
     }
 
     this.setState({ currentPosition: position });
