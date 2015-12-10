@@ -1,4 +1,5 @@
 # React image slider
+Responsive, css transitions based image slider/gallery/carousel for react.js
 
 ![](https://github.com/azimgd/react-image-slider/blob/master/docs/slider.gif?raw=true)
 
@@ -37,7 +38,7 @@ export default React.createClass({
 
 The MIT License (MIT)
 
-Copyright (c) 2015 Aerostat &lt;me@azimgd.com&gt;
+Copyright (c) 2015 React Image Slider &lt;me@azimgd.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
