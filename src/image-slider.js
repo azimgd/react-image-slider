@@ -4,14 +4,15 @@ export default React.createClass({
   getDefaultProps() {
     return {
       isInfinite: true,
-      delay: 2000
+      delay: 5000,
+      visibleItems: 4
     }
   },
   getInitialState() {
     return {
       images: [],
       currentPosition: 0,
-      visibleItems: 4,
+      visibleItems: 1,
       interval: null
     };
   },
@@ -39,7 +40,7 @@ export default React.createClass({
     this.animate();
   },
   updatePosition(position) {
-    const whole = position + this.state.visibleItems;
+    const whole = position + this.props.visibleItems;
 
     if (this.props.isInfinite && position < 0) {
       this.setState({ currentPosition: whole });
@@ -70,7 +71,7 @@ export default React.createClass({
     return { transform };
   },
   isOpaque(key) {
-    const nextPosition = this.state.visibleItems + this.state.currentPosition;
+    const nextPosition = this.props.visibleItems + this.state.currentPosition;
     const opaque = this.state.images.slice(this.state.currentPosition, nextPosition);
 
     return (opaque.indexOf(this.state.images[key]) !== -1);
@@ -80,13 +81,16 @@ export default React.createClass({
       clearInterval(this.state.interval);
     }
 
+    if (!this.props.delay) {
+      return false;
+    }
+
     const interval = setInterval(this.scrollRight, this.props.delay);
     this.setState({ interval });
   },
   render() {
     const sliderStyle = this.sliderStyle();
     const images = this.state.images;
-    const delay = this.props.delay;
 
     return (
       <div className="rsc-container">
@@ -94,13 +98,15 @@ export default React.createClass({
           {images.map((item, key) => {
             const isOpaque = this.isOpaque(key);
             const itemClass = (isOpaque) ? 'rsc-slider-item' : 'rsc-slider-item rsc-slider-item_transparent';
+            const imgWidth = 100 / this.props.visibleItems;
+            const itemStyle = {'flex': `0 0 ${imgWidth}%`};
 
-            return <div className={itemClass} key={key}>
+            return <div className={itemClass} style={itemStyle} key={key}>
               <img src={item} className="rsc-slider-item-img" />
             </div>
           })}
         </div>
-        {images.length > this.state.visibleItems ?
+        {images.length > this.props.visibleItems ?
         <div>
           <div className="rsc-navigation rsc-navigation_left rsc-arrow_left" onClick={this.scrollLeft}></div>
           <div className="rsc-navigation rsc-navigation_right rsc-arrow_right" onClick={this.scrollRight}></div>
