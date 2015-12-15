@@ -12,15 +12,14 @@ export default React.createClass({
     return {
       images: [],
       currentPosition: 0,
-      visibleItems: 1,
       interval: null
     };
   },
   componentDidMount() {
-    this.setItemDimensions('rsc-slider-item');
     this.animate();
+    this.setVisibleItems(this.props.visibleItems);
 
-    window.addEventListener('resize', this.setItemDimensions.bind(this, 'rsc-slider-item'));
+    window.addEventListener('resize', this.setVisibleItems.bind(this, this.props.visibleItems));
   },
   componentWillMount() {
     const images = (this.props.images || []).map((image, count) => {
@@ -29,7 +28,7 @@ export default React.createClass({
     this.setState({images});
   },
   componentWillUnmount() {
-      window.removeEventListener('resize', this.setItemDimensions.bind(this, 'rsc-slider-item'));
+    window.removeEventListener('resize', this.setVisibleItems.bind(this, this.props.visibleItems));
   },
   scrollLeft() {
     this.updatePosition(this.state.currentPosition - 1);
@@ -40,7 +39,7 @@ export default React.createClass({
     this.animate();
   },
   updatePosition(position) {
-    const whole = position + this.props.visibleItems;
+    const whole = position + (this.state.visibleItems || this.props.visibleItems);
 
     if (this.props.isInfinite && position < 0) {
       this.setState({ currentPosition: whole });
@@ -59,19 +58,25 @@ export default React.createClass({
   calculateShift(offset, amount) {
     return offset * amount;
   },
-  setItemDimensions(classname) {
+  setVisibleItems(visibleItems) {
+    const windowWidth = window.innerWidth;
+
+    if (windowWidth < 720) {
+      this.setState({ visibleItems: 1 });
+    } else {
+      this.setState({ visibleItems });
+    }
+  },
+  sliderStyle(classname) {
     const items = document.getElementsByClassName(classname);
     const itemWidth = (items[0]) ? items[0].offsetWidth : 0;
-    this.setState({ itemWidth });
-  },
-  sliderStyle() {
-    const shift = this.calculateShift(this.state.itemWidth, this.state.currentPosition);
+    const shift = this.calculateShift(itemWidth, this.state.currentPosition);
     const transform = `translateX(-${shift}px)`;
 
     return { transform };
   },
   isOpaque(key) {
-    const nextPosition = this.props.visibleItems + this.state.currentPosition;
+    const nextPosition = (this.state.visibleItems || this.props.visibleItems) + this.state.currentPosition;
     const opaque = this.state.images.slice(this.state.currentPosition, nextPosition);
 
     return (opaque.indexOf(this.state.images[key]) !== -1);
@@ -89,7 +94,7 @@ export default React.createClass({
     this.setState({ interval });
   },
   render() {
-    const sliderStyle = this.sliderStyle();
+    const sliderStyle = this.sliderStyle('rsc-slider-item');
     const images = this.state.images;
 
     return (
@@ -98,7 +103,7 @@ export default React.createClass({
           {images.map((item, key) => {
             const isOpaque = this.isOpaque(key);
             const itemClass = (isOpaque) ? 'rsc-slider-item' : 'rsc-slider-item rsc-slider-item_transparent';
-            const imgWidth = 100 / this.props.visibleItems;
+            const imgWidth = 100 / (this.state.visibleItems || this.props.visibleItems);
             const itemStyle = {'flex': `0 0 ${imgWidth}%`};
 
             return <div className={itemClass} style={itemStyle} key={key}>
@@ -106,7 +111,7 @@ export default React.createClass({
             </div>
           })}
         </div>
-        {images.length > this.props.visibleItems ?
+        {images.length > (this.state.visibleItems || this.props.visibleItems) ?
         <div>
           <div className="rsc-navigation rsc-navigation_left rsc-arrow_left" onClick={this.scrollLeft}></div>
           <div className="rsc-navigation rsc-navigation_right rsc-arrow_right" onClick={this.scrollRight}></div>
