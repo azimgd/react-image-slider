@@ -3,7 +3,8 @@ import React from 'react';
 export default React.createClass({
   getDefaultProps() {
     return {
-      isInfinite: true
+      isInfinite: true,
+      delay: 5000
     }
   },
   getInitialState() {
@@ -15,6 +16,8 @@ export default React.createClass({
   },
   componentDidMount() {
     this.setItemDimensions('rsc-slider-item');
+    this.animate();
+
     window.addEventListener('resize', this.setItemDimensions.bind(this, 'rsc-slider-item'));
   },
   componentWillMount() {
@@ -35,15 +38,15 @@ export default React.createClass({
   updatePosition(position) {
     const whole = position + this.state.visibleItems;
 
-    if(this.props.isInfinite && position < 0) {
+    if (this.props.isInfinite && position < 0) {
       this.setState({ currentPosition: whole });
     }
 
-    if(this.props.isInfinite && whole > this.state.images.length) {
+    if (this.props.isInfinite && whole > this.state.images.length) {
       this.setState({ currentPosition: 0 });
     }
 
-    if(whole > this.state.images.length || position < 0) {
+    if (whole > this.state.images.length || position < 0) {
       return;
     }
 
@@ -69,9 +72,13 @@ export default React.createClass({
 
     return (opaque.indexOf(this.state.images[key]) !== -1);
   },
+  animate() {
+    setInterval(this.scrollRight, this.props.delay);
+  },
   render() {
     const sliderStyle = this.sliderStyle();
     const images = this.state.images;
+    const delay = this.props.delay;
 
     return (
       <div className="rsc-container">
