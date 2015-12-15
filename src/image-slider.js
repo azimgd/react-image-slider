@@ -4,14 +4,15 @@ export default React.createClass({
   getDefaultProps() {
     return {
       isInfinite: true,
-      delay: 5000
+      delay: 2000
     }
   },
   getInitialState() {
     return {
       images: [],
       currentPosition: 0,
-      visibleItems: 4
+      visibleItems: 4,
+      interval: null
     };
   },
   componentDidMount() {
@@ -31,9 +32,11 @@ export default React.createClass({
   },
   scrollLeft() {
     this.updatePosition(this.state.currentPosition - 1);
+    this.animate();
   },
   scrollRight() {
     this.updatePosition(this.state.currentPosition + 1);
+    this.animate();
   },
   updatePosition(position) {
     const whole = position + this.state.visibleItems;
@@ -73,7 +76,12 @@ export default React.createClass({
     return (opaque.indexOf(this.state.images[key]) !== -1);
   },
   animate() {
-    setInterval(this.scrollRight, this.props.delay);
+    if (this.state.interval) {
+      clearInterval(this.state.interval);
+    }
+
+    const interval = setInterval(this.scrollRight, this.props.delay);
+    this.setState({ interval });
   },
   render() {
     const sliderStyle = this.sliderStyle();
