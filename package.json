@@ -24,7 +24,7 @@
     "type": "git",
     "url": "https://github.com/azimgd/react-image-slider.git"
   },
-  "peerDependencies": {
+  "dependencies": {
     "react": "^15.1"
   },
   "devDependencies": {
