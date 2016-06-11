@@ -48,7 +48,7 @@ class Slider extends React.Component {
   }
 
   updatePosition(position) {
-    const whole = position + (this.state.visibleItems || this.props.visibleItems);
+    const whole = position + this.state.visibleItems;
 
     if (this.props.isInfinite && position < 0) {
       this.setState({ currentPosition: whole });
@@ -89,10 +89,10 @@ class Slider extends React.Component {
   }
 
   isOpaque(key) {
-    const nextPosition = (this.state.visibleItems || this.props.visibleItems) + this.state.currentPosition;
+    const nextPosition = this.state.visibleItems + this.state.currentPosition;
     const opaque = this.state.images.slice(this.state.currentPosition, nextPosition);
 
-    return (opaque.indexOf(this.state.images[key]) !== -1);
+    return opaque.indexOf(this.state.images[key]) !== -1;
   }
 
   animate() {
@@ -110,21 +110,21 @@ class Slider extends React.Component {
 
   render() {
     const sliderStyle = this.sliderStyle('rsc-slider-item');
-    const { images } = this.state;
+    const { images, visibleItems } = this.state;
 
     return (
       <div className="rsc-container">
         <div className="rsc-slider" style={sliderStyle}>
           {images.map((item, key) => {
             const itemClass = this.isOpaque(key) ? 'rsc-slider-item' : 'rsc-slider-item rsc-slider-item_transparent';
-            const imgWidth = 100 / (this.state.visibleItems || this.props.visibleItems);
+            const imgWidth = 100 / visibleItems;
 
             return <div className={itemClass} key={key} style={{'flex': `0 0 ${imgWidth}%`}}>
               <img src={item} className="rsc-slider-item-img" />
             </div>
           })}
         </div>
-        {images.length > (this.state.visibleItems || this.props.visibleItems) ?
+        {images.length > visibleItems ?
           <div>
             <div className="rsc-navigation rsc-navigation_left rsc-arrow_left" onClick={this.scrollLeft}></div>
             <div className="rsc-navigation rsc-navigation_right rsc-arrow_right" onClick={this.scrollRight}></div>
