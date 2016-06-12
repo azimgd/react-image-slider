@@ -1,0 +1,67 @@
+.rsc-container {
+  width: 100%;
+  position: relative;
+  width: 80%;
+  margin: 0 auto;
+}
+.rsc-slider {
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-justify-content: flex-start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  transition: all 0.2s ease-in-out;
+}
+.rsc-slider-item {
+  width: 100%;
+  box-sizing: border-box;
+}
+.rsc-slider-item-img {
+  width: 100%;
+  box-sizing: border-box;
+  padding: 5px;
+}
+.rsc-slider-item_transparent {
+  opacity: 0.3;
+}
+.rsc-navigation {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  cursor: pointer;
+  width: 70px;
+}
+.rsc-navigation_left {
+  left: 0;
+}
+.rsc-navigation_right {
+  right: 0;
+  text-align: right;
+}
+.rsc-arrow_left,
+.rsc-arrow_right {
+  background-repeat: no-repeat;
+  background-size: 50%;
+  background-position: center;
+  background-image: url("data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iaXNvLTg4NTktMSI/PjwhRE9DVFlQRSBzdmcgUFVCTElDICItLy9XM0MvL0RURCBTVkcgMS4xLy9FTiIgImh0dHA6Ly93d3cudzMub3JnL0dyYXBoaWNzL1NWRy8xLjEvRFREL3N2ZzExLmR0ZCI+PHN2ZyB2ZXJzaW9uPSIxLjEiIGlkPSJDYXBhXzEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMzA2cHgiIGhlaWdodD0iMzA2cHgiIHZpZXdCb3g9IjAgMCAzMDYgMzA2IiBzdHlsZT0iZW5hYmxlLWJhY2tncm91bmQ6bmV3IDAgMCAzMDYgMzA2OyIgeG1sOnNwYWNlPSJwcmVzZXJ2ZSI+PGc+PGcgaWQ9ImNoZXZyb24tcmlnaHQiPjxwb2x5Z29uIHBvaW50cz0iOTQuMzUsMCA1OC42NSwzNS43IDE3NS45NSwxNTMgNTguNjUsMjcwLjMgOTQuMzUsMzA2IDI0Ny4zNSwxNTMgIi8+PC9nPjwvZz48Zz48L2c+PGc+PC9nPjxnPjwvZz48Zz48L2c+PGc+PC9nPjxnPjwvZz48Zz48L2c+PGc+PC9nPjxnPjwvZz48Zz48L2c+PGc+PC9nPjxnPjwvZz48Zz48L2c+PGc+PC9nPjxnPjwvZz48L3N2Zz4=");
+}
+.rsc-arrow_left {
+  -webkit-transform: rotateY(-180deg);
+          transform: rotateY(-180deg);
+}
+@media screen and (min-width: 1280px) {
+  .rsc-arrow_left,
+  .rsc-arrow_right {
+    background-size: 100%;
+  }
+}
+@media screen and (max-width: 720px) {
+  .rsc-navigation {
+    width: 40px;
+  }
+  .rsc-arrow_left,
+  .rsc-arrow_right {
+    background-size: 70%;
+  }
+}
