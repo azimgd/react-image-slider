@@ -34,11 +34,21 @@ export default React.createClass({
 });
 ```
 
+## Demo
+
+In order to run demo, execute:
+```
+cd example
+npm install
+npm start
+```
+and then navigate to *http://localhost:8080*
+
 ## License
 
 The MIT License (MIT)
 
-Copyright (c) 2015 React Image Slider &lt;me@azimgd.com&gt;
+Copyright (c) 2016 React Image Slider &lt;me@azimgd.com&gt;
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
