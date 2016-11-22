@@ -1,4 +1,5 @@
 import React from 'react';
+import ImageSliderHoc from './ImageSliderHoc';
 
 class Slider extends React.Component {
   constructor(props) {
