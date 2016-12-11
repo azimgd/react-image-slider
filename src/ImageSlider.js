@@ -1,10 +1,9 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import ImageSliderHoc from './ImageSliderHoc';
 
 class Slider extends React.Component {
   constructor(props) {
     super(props);
-
     this.scrollLeft = this.scrollLeft.bind(this);
     this.scrollRight = this.scrollRight.bind(this);
     this.updatePosition = this.updatePosition.bind(this);
@@ -21,111 +20,107 @@ class Slider extends React.Component {
   }
 
   componentDidMount() {
-    this.animate();
     this.setVisibleItems(this.props.visibleItems);
-
     window.addEventListener('resize', this.setVisibleItems.bind(this, this.props.visibleItems));
   }
 
-  componentWillMount() {
-    const images = (this.props.images || []).map((image, count) => {
-      return image + `?rscver${count}`;
-    });
-    this.setState({images});
-  }
-
   componentWillUnmount() {
+    this.clearAnimate();
     window.removeEventListener('resize', this.setVisibleItems.bind(this, this.props.visibleItems));
   }
 
+  componentWillUpdate(nextProps, nextState) {
+    if (this.state.currentPosition !== nextState.currentPosition) {
+      this.animate();
+    }
+  }
+
   scrollLeft() {
-    this.updatePosition(this.state.currentPosition - 1);
-    this.animate();
+    const currentPosition = this.updatePosition(this.state.currentPosition - 1);
+    this.setState({ currentPosition });
   }
 
   scrollRight() {
-    this.updatePosition(this.state.currentPosition + 1);
-    this.animate();
+    const currentPosition = this.updatePosition(this.state.currentPosition + 1);
+    this.setState({ currentPosition });
   }
 
-  updatePosition(position) {
-    const whole = position + this.state.visibleItems;
-
-    if (this.props.isInfinite && position < 0) {
-      this.setState({ currentPosition: whole });
-    }
-
-    if (this.props.isInfinite && whole > this.state.images.length) {
-      this.setState({ currentPosition: 0 });
-    }
-
-    if (whole > this.state.images.length || position < 0) {
-      return;
-    }
-
-    this.setState({ currentPosition: position });
-  }
-
-  calculateShift(offset, amount) {
-    return offset * amount;
-  }
-
-  setVisibleItems(visibleItems) {
-    const windowWidth = window.innerWidth;
-
-    if (windowWidth < 720) {
-      this.setState({ visibleItems: 1 });
-    } else {
-      this.setState({ visibleItems });
-    }
+  setVisibleItems(currentVisibleItems) {
+    const container = document.querySelector('.rsc-slider');
+    const visibleItems = (container && container.offsetWidth < 720) ? 1 : currentVisibleItems;
+    this.setState({ visibleItems });
   }
 
   sliderStyle(classname) {
-    const items = document.getElementsByClassName(classname);
-    const itemWidth = (items[0]) ? items[0].offsetWidth : 0;
-    const shift = this.calculateShift(itemWidth, this.state.currentPosition);
-    const transform = `translateX(-${shift}px)`;
-
-    return { transform };
+    const items = document.querySelector(classname);
+    const itemWidth = items ? items.offsetWidth : 0;
+    const shift = itemWidth * this.state.currentPosition;
+    return { transform: `translateX(-${shift}px)` };
   }
 
   isOpaque(key) {
     const nextPosition = this.state.visibleItems + this.state.currentPosition;
-    const opaque = this.state.images.slice(this.state.currentPosition, nextPosition);
-
-    return opaque.indexOf(this.state.images[key]) !== -1;
+    const opaque = this.props.images.slice(this.state.currentPosition, nextPosition);
+    return opaque.indexOf(this.props.images[key]) !== -1;
   }
 
   animate() {
     if (this.state.interval) {
-      clearInterval(this.state.interval);
+      window.clearInterval(this.state.interval);
     }
-
     if (!this.props.delay) {
       return false;
     }
-
-    const interval = setInterval(this.scrollRight, this.props.delay);
+    const interval = window.setInterval(this.scrollRight, this.props.delay);
     this.setState({ interval });
   }
 
+  clearAnimate() {
+    if (this.state.interval) {
+      clearInterval(this.state.interval);
+      this.setState({ interval: null });
+    }
+  }
+
+  updatePosition(nextPosition) {
+    const { visibleItems, currentPosition } = this.state;
+    const skipScrollIfEnd = this.props.calculator.skipScrollIfEnd(visibleItems, currentPosition, nextPosition);
+    const skipScrollIfNonInfinite = this.props.calculator.skipScrollIfNonInfinite(visibleItems, currentPosition, nextPosition);
+    const scrollIfInfinite = this.props.calculator.scrollIfInfinite(visibleItems, currentPosition, nextPosition);
+    const scrollToBeginningIfEnd = this.props.calculator.scrollToBeginningIfEnd(visibleItems, currentPosition, nextPosition);
+    if (skipScrollIfEnd !== undefined) {
+      return skipScrollIfEnd;
+    }
+    if (skipScrollIfNonInfinite !== undefined) {
+      return skipScrollIfNonInfinite;
+    }
+    if (scrollIfInfinite !== undefined) {
+      return scrollIfInfinite;
+    }
+    if (scrollToBeginningIfEnd !== undefined) {
+      return scrollToBeginningIfEnd;
+    }
+    return nextPosition;
+  }
+
   render() {
-    const sliderStyle = this.sliderStyle('rsc-slider-item');
-    const { images, visibleItems } = this.state;
+    const sliderStyle = this.sliderStyle('.rsc-slider-item');
+    const imgWidth = 100 / this.state.visibleItems;
+    const images = this.props.images.map((item, key) => ({
+      itemClass: this.isOpaque(key) ? 'rsc-slider-item' : 'rsc-slider-item rsc-slider-item_transparent',
+      src: item,
+    }));
 
     return (
       <div className="rsc-container">
         <div className="rsc-slider" style={sliderStyle}>
-          {images.map((item, key) => {
-            const itemClass = this.isOpaque(key) ? 'rsc-slider-item' : 'rsc-slider-item rsc-slider-item_transparent';
-            const imgWidth = 100 / visibleItems;
-
-            return <div className={itemClass} key={key} style={{'flex': `0 0 ${imgWidth}%`}}>
-              <img src={item} className="rsc-slider-item-img" />
+          {images.map((item, key) =>
+            <div className={item.itemClass} key={key} style={{'flex': `0 0 ${imgWidth}%`}}>
+              <img src={item.src} className="rsc-slider-item-img" />
             </div>
-          })}
+          )}
         </div>
-        {images.length > visibleItems ?
+        {images.length > this.state.visibleItems ?
           <div>
             <div className="rsc-navigation rsc-navigation_left rsc-arrow_left" onClick={this.scrollLeft}></div>
             <div className="rsc-navigation rsc-navigation_right rsc-arrow_right" onClick={this.scrollRight}></div>
@@ -136,10 +131,11 @@ class Slider extends React.Component {
   }
 }
 
-Slider.defaultProps = {
-  isInfinite: true,
-  delay: 5000,
-  visibleItems: 4,
-};
+Slider.propTypes = React.PropTypes.shape({
+  visibleItems: PropTypes.number.isRequired,
+  images: PropTypes.array.isRequired,
+  delay: PropTypes.number.isRequired,
+  calculator: PropTypes.func.isRequired,
+}).isRequired;
 
-export default Slider;
+export default ImageSliderHoc(Slider);
