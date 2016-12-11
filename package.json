@@ -1,6 +1,6 @@
 {
   "name": "react-image-slider",
-  "version": "0.0.6",
+  "version": "0.1.0",
   "description": "Image slider component for React",
   "main": "lib/ImageSlider.js",
   "keywords": [
@@ -18,7 +18,8 @@
   "author": "Azim Gadzhiagayev <me@azimgd.com>",
   "license": "MIT",
   "scripts": {
-    "compile": "babel -d lib/ src/"
+    "compile": "babel -d lib/ src/ && cp src/image-slider.css lib/",
+    "prepublish": "npm run compile"
   },
   "repository": {
     "type": "git",
