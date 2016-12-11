@@ -60,8 +60,8 @@ class Slider extends React.Component {
 
   isOpaque(key) {
     const nextPosition = this.state.visibleItems + this.state.currentPosition;
-    const opaque = this.props.images.slice(this.state.currentPosition, nextPosition);
-    return opaque.indexOf(this.props.images[key]) !== -1;
+    const opaque = this.props.children.slice(this.state.currentPosition, nextPosition);
+    return opaque.indexOf(this.props.children[key]) !== -1;
   }
 
   animate() {
@@ -106,7 +106,7 @@ class Slider extends React.Component {
   render() {
     const sliderStyle = this.sliderStyle('.rsc-slider-item');
     const imgWidth = 100 / this.state.visibleItems;
-    const images = this.props.images.map((item, key) => ({
+    const images = this.props.children.map((item, key) => ({
       itemClass: this.isOpaque(key) ? 'rsc-slider-item' : 'rsc-slider-item rsc-slider-item_transparent',
       src: item,
     }));
@@ -116,7 +116,7 @@ class Slider extends React.Component {
         <div className="rsc-slider" style={sliderStyle}>
           {images.map((item, key) =>
             <div className={item.itemClass} key={key} style={{'flex': `0 0 ${imgWidth}%`}}>
-              <img src={item.src} className="rsc-slider-item-img" />
+              <div className="rsc-slider-item-img">{item.src}</div>
             </div>
           )}
         </div>

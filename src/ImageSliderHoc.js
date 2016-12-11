@@ -46,10 +46,10 @@ export default function ImageSliderHoc(Component) {
     }
 
     render() {
-      const images = this.renameImages(this.props.images);
+      const images = this.renameImages(this.props.children);
       const calculator = this.positionCalculator({
         isInfinite: this.props.isInfinite,
-        totalItems: this.props.images.length,
+        totalItems: this.props.children.length,
       });
       return (
         <Component

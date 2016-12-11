@@ -13,7 +13,11 @@ class App extends React.Component {
       '//placehold.it/600/e67e22',
     ];
 
-    return <Slider images={images} isInfinite={true} delay={5000}/>
+    return (
+      <Slider images={images} isInfinite delay={5000}>
+        {images.map((image, key) => <div key={key}><img src={image} alt="" /></div>)}
+      </Slider>
+    );
   }
 }
 

@@ -22,6 +22,11 @@
   box-sizing: border-box;
   padding: 5px;
 }
+
+.rsc-slider-item-img img {
+  max-width: 100%;
+}
+
 .rsc-slider-item_transparent {
   opacity: 0.3;
 }
@@ -30,7 +35,7 @@
   top: 0;
   height: 100%;
   cursor: pointer;
-  width: 70px;
+  width: 50px;
 }
 .rsc-navigation_left {
   left: 0;
