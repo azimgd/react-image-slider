@@ -1,4 +1,5 @@
 import React, { PropTypes } from 'react';
+import PropTypes from 'prop-types';
 
 export default function ImageSliderHoc(Component) {
   class WrapperComponent extends React.Component {
@@ -61,7 +62,7 @@ export default function ImageSliderHoc(Component) {
     }
   }
 
-  WrapperComponent.propTypes = React.PropTypes.shape({
+  WrapperComponent.propTypes = PropTypes.shape({
     visibleItems: PropTypes.number.isRequired,
     images: PropTypes.array.isRequired,
     delay: PropTypes.number.isRequired,
