@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react';
+import React from 'react';
 import ImageSliderHoc from './ImageSliderHoc';
 
 class Slider extends React.Component {
@@ -131,7 +131,7 @@ class Slider extends React.Component {
   }
 }
 
-Slider.propTypes = React.PropTypes.shape({
+Slider.propTypes = PropTypes.shape({
   visibleItems: PropTypes.number.isRequired,
   images: PropTypes.array.isRequired,
   delay: PropTypes.number.isRequired,
